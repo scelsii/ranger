@@ -10,4 +10,16 @@ class ExpanderTest:
         """main test runner"""
         print(Expander.__name__)
 
-        # add new test calls here
+        self.unboundedPair()
+        self.boundedPair()
+
+    # add new test calls here
+    def unboundedPair(self):
+        """22+"""
+        self.expander.expand('22+')
+        pass
+
+    def boundedPair(self):
+        """22-77"""
+        self.expander.expand('22-77')
+        pass

@@ -17,6 +17,7 @@ class K(Enum):
     EXACT = 'EXACT'
     EXACT_SUITED = 'EXACT_SUITED'
     ALL_COMBOS = 'ALL_COMBOS'
+    ALL_GREATER_COMBOS = 'ALL_GREATER_COMBOS'
     ALL_OFFSUIT_COMBOS = 'ALL_OFFSUIT_COMBOS'
     ALL_SUITED_COMBOS = 'ALL_SUITED_COMBOS'
     ALL_GREATER_OFFSUIT_COMBOS = 'ALL_GREATER_OFFSUIT_COMBOS'
@@ -41,6 +42,7 @@ MatcherKey = Literal[
     K.EXACT,
     K.EXACT_SUITED,
     K.ALL_COMBOS,
+    K.ALL_GREATER_COMBOS,
     K.ALL_OFFSUIT_COMBOS,
     K.ALL_SUITED_COMBOS,
     K.ALL_GREATER_OFFSUIT_COMBOS,
@@ -51,13 +53,7 @@ MatcherKey = Literal[
     K.ALL_SPECIFIC_SUITED_COMBOS_BOUNDED,
 ]
 
-ShorthandCategory = Literal[
-    C.EXACT,
-    C.BOUNDED,
-    C.UNBOUNDED,
-]
-
-ExpanderQualifier = Literal[
+Qualifier = Literal[
     RangeOrDiscrete.DISCRETE,
     RangeOrDiscrete.RANGE
 ]
@@ -83,6 +79,12 @@ class Hands:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD,
 
+        # 22+
+        K.ALL_GREATER_COMBOS:
+            R.NUMBER_OR_FACE_CARD
+            + R.NUMBER_OR_FACE_CARD
+            + R.ALL_GREATER_COMBOS,
+
         # QTo
         K.ALL_OFFSUIT_COMBOS:
             R.NUMBER_OR_FACE_CARD
@@ -95,7 +97,7 @@ class Hands:
             + R.NUMBER_OR_FACE_CARD
             + R.SUITED,
 
-        # 76+
+        # 76o+
         K.ALL_GREATER_OFFSUIT_COMBOS:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
@@ -151,25 +153,23 @@ class Hands:
         # and suggest removing bottom hand qualifier
     }
 
-    categories = {
-        C.EXACT: [
-            K.EXACT,
-            K.EXACT_SUITED
-        ],
-        C.BOUNDED: [
-            K.ALL_COMBOS_BOUNDED,
-            K.ALL_SUITED_COMBOS_BOUNDED,
-            K.ALL_OFFSUIT_COMBOS_BOUNDED,
-            K.ALL_SPECIFIC_SUITED_COMBOS_BOUNDED
-        ],
-        C.UNBOUNDED: [
-            K.ALL_COMBOS,
-            K.ALL_OFFSUIT_COMBOS,
-            K.ALL_SUITED_COMBOS,
-            K.ALL_GREATER_OFFSUIT_COMBOS,
-            K.ALL_GREATER_SUITED_COMBOS
-        ]
-    }
+    discrete_keys = [
+        K.EXACT,
+        K.EXACT_SUITED,
+        K.ALL_COMBOS,
+        K.ALL_GREATER_COMBOS,
+        K.ALL_OFFSUIT_COMBOS,
+        K.ALL_SUITED_COMBOS,
+        K.ALL_GREATER_OFFSUIT_COMBOS,
+        K.ALL_GREATER_SUITED_COMBOS
+    ]
+
+    range_keys = [
+        K.ALL_COMBOS_BOUNDED,
+        K.ALL_SUITED_COMBOS_BOUNDED,
+        K.ALL_OFFSUIT_COMBOS_BOUNDED,
+        K.ALL_SPECIFIC_SUITED_COMBOS_BOUNDED
+    ]
 
     def isMatch(self, m: re.Pattern, combo: str) -> bool:
         return re.compile(r'^' + m + r'$').match(combo)
@@ -178,16 +178,11 @@ class Hands:
         for k, m in self.matchers.items():
             if self.isMatch(m, combo):
                 return k
-
-    def getCategory(self, match_key: str) -> ShorthandCategory:
-        for c, k in self.categories.items():
-            if match_key in k:
-                return c
+        raise ValueError(f'combo = {combo} did not produce a match_key')
 
     def qualify(self, combo: str) -> tuple[MatcherKey, RangeOrDiscrete]:
         match_key = self.getMatchKey(combo)
-        category = self.getCategory(combo)
         return (
             match_key,
-            RangeOrDiscrete.DISCRETE if category == C.EXACT else RangeOrDiscrete.RANGE
+            RangeOrDiscrete.RANGE if match_key in self.range_keys else RangeOrDiscrete.DISCRETE
         )

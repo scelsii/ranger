@@ -16,6 +16,7 @@ class ValidatorTest:
         '65s',
         '76-AKs',
         'T9-KQss',
+        '22+'
     ]
 
     INVALID_HANDS = [
