@@ -1,4 +1,4 @@
-from .hands import K, MatcherKey, Hands, RangeOrDiscrete
+from .hands import MatcherKey, Hands, RangeOrDiscrete
 from .order import Order
 from pprint import pprint
 
@@ -25,13 +25,18 @@ class Expander:
         pprint({ 'combo': combo, 'match_key': match_key, 'qualifier': qualifier })
         return self.expandDiscrete(match_key, combo) if qualifier == RangeOrDiscrete.DISCRETE else self.expandRange(combo)
 
-    def expandRange(self, combo: str) -> str:
+    def expandRange(self, combo: str) -> list[str]:
         range = combo.split('-')
         combos = []
+        match_keys = [] # debugging only, remove later
         for _combo in range:
             match_key = self.hands.getMatchKey(_combo)
             combos.append(self.expandDiscrete(match_key, _combo))
-        # return ','.join(combos)
+            match_keys.append(match_key) # debugging only
+        print(f'expanding range = {range} with match_keys = {match_keys}')
 
-    def expandDiscrete(self, match_key: MatcherKey, combo: str):
+    def expandDiscrete(self, match_key: MatcherKey, combo: str) -> list[str]:
         print(f'expanding combo = {combo} with match_key = {match_key}')
+
+    def format(self, combos: list[str]) -> str:
+        return ','.join(combos)
