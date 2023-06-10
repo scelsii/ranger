@@ -1,8 +1,7 @@
 from lib.command import ps_eval
-from tst.validHandPatterns import main
+from tests.runner import runTests
 
-# tests
-main()
+runTests()
 
 """
 what are possible inputs?

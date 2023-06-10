@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Literal
 
 """hand type regexes"""
-class R(Enum):
+class R:
     NUMBER_OR_FACE_CARD = r"[2-9TJQKA]{1}"
     SUIT = r"[hdcs]{1}"
     OFFSUIT = r"o"
@@ -64,61 +64,61 @@ ExpanderQualifier = Literal[
 
 class Hands:
     matchers = {
-        """AdTd"""
-        [K.EXACT]:
+        # AdTd
+        K.EXACT:
             R.NUMBER_OR_FACE_CARD
             + R.SUIT
             + R.NUMBER_OR_FACE_CARD
             + R.SUIT,
 
-        """ATdd"""
-        [K.EXACT_SUITED]:
+        # ATdd
+        K.EXACT_SUITED:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
             + R.SUIT
             + R.SUIT,
 
-        """KK"""
-        [K.ALL_COMBOS]:
+        # KK
+        K.ALL_COMBOS:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD,
 
-        """QTo"""
-        [K.ALL_OFFSUIT_COMBOS]:
+        # QTo
+        K.ALL_OFFSUIT_COMBOS:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
             + R.OFFSUIT,
 
-        """QTs"""
-        [K.ALL_SUITED_COMBOS]:
+        # QTs
+        K.ALL_SUITED_COMBOS:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
             + R.SUITED,
 
-        """76+"""
-        [K.ALL_GREATER_OFFSUIT_COMBOS]:
+        # 76+
+        K.ALL_GREATER_OFFSUIT_COMBOS:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
             + R.OFFSUIT
             + R.ALL_GREATER_COMBOS,
 
-        """76s+"""
-        [K.ALL_GREATER_SUITED_COMBOS]:
+        # 76s+
+        K.ALL_GREATER_SUITED_COMBOS:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
             + R.SUITED
             + R.ALL_GREATER_COMBOS,
 
-        """54-T9"""
-        [K.ALL_COMBOS_BOUNDED]:
+        # 54-T9
+        K.ALL_COMBOS_BOUNDED:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
             + R.RANGE_OF_HANDS
             + R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD,
 
-        """54-T9o"""
-        [K.ALL_OFFSUIT_COMBOS_BOUNDED]:
+        # 54-T9o
+        K.ALL_OFFSUIT_COMBOS_BOUNDED:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
             + R.RANGE_OF_HANDS
@@ -126,8 +126,8 @@ class Hands:
             + R.NUMBER_OR_FACE_CARD
             + R.OFFSUIT,
 
-        """54-T9s"""
-        [K.ALL_SUITED_COMBOS_BOUNDED]:
+        # 54-T9s
+        K.ALL_SUITED_COMBOS_BOUNDED:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
             + R.RANGE_OF_HANDS
@@ -135,8 +135,8 @@ class Hands:
             + R.NUMBER_OR_FACE_CARD
             + R.SUITED,
 
-        """54-T9cc"""
-        [K.ALL_SPECIFIC_SUITED_COMBOS_BOUNDED]:
+        # 54-T9cc
+        K.ALL_SPECIFIC_SUITED_COMBOS_BOUNDED:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
             + R.RANGE_OF_HANDS
@@ -179,12 +179,15 @@ class Hands:
             if self.isMatch(m, combo):
                 return k
 
-    def getCategory(self, combo: str) -> ShorthandCategory:
-        match_key = self.getMatchKey(self, combo)
+    def getCategory(self, match_key: str) -> ShorthandCategory:
         for c, k in self.categories.items():
             if match_key in k:
                 return c
 
-    def getRangeOrDiscrete(self, combo: str) -> ExpanderQualifier:
+    def qualify(self, combo: str) -> tuple[MatcherKey, RangeOrDiscrete]:
+        match_key = self.getMatchKey(combo)
         category = self.getCategory(combo)
-        return RangeOrDiscrete.DISCRETE if category == C.EXACT else RangeOrDiscrete.RANGE
+        return (
+            match_key,
+            RangeOrDiscrete.DISCRETE if category == C.EXACT else RangeOrDiscrete.RANGE
+        )

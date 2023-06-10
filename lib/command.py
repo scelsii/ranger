@@ -2,6 +2,6 @@ import os
 
 def ps_eval(args: list) -> None:
     this_dir = os.path.dirname(__file__)
-    ps_eval_path = '../stove/ps-eval'
+    ps_eval_path = 'stove/ps-eval'
     abs_file_path = os.path.join(this_dir, ps_eval_path)
     os.system(f"{abs_file_path} {' '.join(args)}")
