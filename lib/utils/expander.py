@@ -1,5 +1,6 @@
-from .hands import MatcherKey, Hands, RangeOrDiscrete
-from .order import Order
+from .hands import MatcherKey, K, Hands, RangeOrDiscrete
+from .poker_iterator import PokerIterator
+from .expansion_adapters import ExpansionAdapters
 from pprint import pprint
 
 class Expander:
@@ -18,7 +19,7 @@ class Expander:
     """
 
     hands = Hands()
-    order = Order()
+    adapters = ExpansionAdapters()
 
     def expand(self, combo: str) -> str:
         (match_key, qualifier) = self.hands.qualify(combo)
@@ -36,7 +37,46 @@ class Expander:
         print(f'expanding range = {range} with match_keys = {match_keys}')
 
     def expandDiscrete(self, match_key: MatcherKey, combo: str) -> list[str]:
-        print(f'expanding combo = {combo} with match_key = {match_key}')
+        expansion = None
 
-    def format(self, combos: list[str]) -> str:
-        return ','.join(combos)
+        if match_key == K.EXACT:
+            expansion = self.adapters.exactSuited(combo)
+
+        elif match_key == K.EXACT_SUITED:
+            expansion = self.adapters.exactSuited(combo)
+
+        elif match_key == K.ALL_COMBOS:
+            expansion = self.adapters.allCombos(combo)
+
+        elif match_key == K.ALL_GREATER_COMBOS:
+            expansion = self.adapters.allGreaterCombos(combo)
+
+        elif match_key == K.ALL_OFFSUIT_COMBOS:
+            expansion = self.adapters.allOffsuitCombos(combo)
+
+        elif match_key == K.ALL_SUITED_COMBOS:
+            expansion = self.adapters.allSuitedCombos(combo)
+
+        elif match_key == K.ALL_GREATER_OFFSUIT_COMBOS:
+            expansion = self.adapters.allGreaterOffsuitCombos(combo)
+
+        elif match_key == K.ALL_GREATER_SUITED_COMBOS:
+            expansion = self.adapters.allGreaterSuitedCombos(combo)
+
+        elif match_key == K.ALL_COMBOS_BOUNDED:
+            expansion = self.adapters.allCombosBounded()
+
+        elif match_key == K.ALL_OFFSUIT_COMBOS_BOUNDED:
+            expansion = self.adapters.allOffsuitCombosBounded(combo)
+
+        elif match_key == K.ALL_SUITED_COMBOS_BOUNDED:
+            expansion = self.adapters.allSuitedCombosBounded(combo)
+
+        elif match_key == K.ALL_SPECIFIC_SUITED_COMBOS_BOUNDED:
+            expansion = self.adapters.allSpecificSuitedCombosBounded(combo)
+
+        else:
+            raise ValueError(f'unsupported match_key = {match_key} in .expandDiscrete, unable to find adapter')
+
+        print(expansion)
+        return expansion
