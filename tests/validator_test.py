@@ -36,15 +36,12 @@ class ValidatorTest:
         self.invalidHands()
         # add new test calls here
 
-
-
     def validHands(self):
         for h in self.VALID_HANDS:
             if self.validator.isValid(h) != True:
                 return U.fail(f'failed to recognize valid hand: {h}')
 
         U.success('.isValid -> all valid hands return True')
-
 
     def invalidHands(self):
         for h in self.INVALID_HANDS:

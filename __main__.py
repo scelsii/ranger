@@ -1,7 +1,10 @@
 from lib.command import ps_eval
 from tests.runner import runTests
+from lib.utils.expander import Expander
 
 runTests()
+
+expander = Expander()
 
 """
 what are possible inputs?

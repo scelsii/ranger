@@ -1,10 +1,6 @@
 import re
 from .hands import Hands
 
-"""
-combo: shorthand hand accepted by ps_eval
-eg., 22+, 76s, QThh, AdTd, 56s-T9s, QJo
-"""
 
 class Validator:
     hands = Hands()
@@ -16,6 +12,7 @@ class Validator:
 
         return False
 
+    # checks for matching suit flags in 'JThh(+)'
     def isValidSpecificSuitedCombo(self, combo: str):
         [a, b] = combo[2:4]
-        return a == b
+        return self.isValid(combo) and a == b

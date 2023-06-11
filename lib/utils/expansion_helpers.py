@@ -13,32 +13,37 @@ class ExpansionHelpers:
     def getRawHandAndCeiling(self, combo: str) -> list[str]:
         return [self.getRawHand(c) for c in combo.split('-')]
 
+    def getRawHandAndCeilingWithSuit(self, combo: str) -> list[str]:
+        suit = combo[5]
+        return [self.getRawHand(c) for c in combo.split('-')] + [suit]
+
     # get suit from eg 'AJhh'
     def getComboSuit(self, combo: str) -> str:
         return combo[2]
 
-    def allGreaterCombinations(self, raw_hand: str, ceiling=None, filters={}) -> list[str]:
+    def allGreaterCombinations(self, raw_hand: str, filters={}, ceiling=None) -> list[str]:
         [a, b] = list(raw_hand)
 
         c = PokerIterator(a)
         d = PokerIterator(b)
-        card_only_perms = []
+        raw_hands = []
 
         (c_top, d_top) = PokerIterator.getTops(ceiling)
 
-        while c.current() is not c_top and d.current() is not d_top:
-            card_only_perms.append(c + d)
+        while c.current() != c_top and d.current() != d_top:
+            raw_hands.append(c + d)
             c.next(); d.next()
 
         expansion = []
-        for p in card_only_perms:
-            expansion += self.combinations(p, **filters)
+        for p in raw_hands:
+            expansion += self.combinations(p, filters)
 
-    def combinations(self, raw_hand: str, offsuit=False, suited=False, suit=None) -> list[str]:
+        return expansion
 
+    def combinations(self, raw_hand: str, filters={}) -> list[str]:
         [top, bottom] = list(raw_hand)
         result = self.prune([top + x + bottom + y for x in SUIT_LIST for y in SUIT_LIST])
-
+        [offsuit, suited, suit] = self.unpackFilters(filters)
         if offsuit:
             return self.offsuit(result)
         elif suited:
@@ -55,10 +60,16 @@ class ExpansionHelpers:
             result['suit'] = suit
         return result
 
+    def unpackFilters(self, filters: dict):
+        offsuit = filters.get('offsuit')
+        suited = filters.get('suited')
+        suit = filters.get('suit')
+        return [offsuit, suited, suit]
+
     def offsuit(self, combs):
         result = []
         for c in combs:
-            [a, b] = list(c)
+            [a, b] = [c[0:2], c[2:]]
             s1, s2 = a[1], b[1]
             if s1 != s2:
                 result.append(c)
@@ -67,7 +78,7 @@ class ExpansionHelpers:
     def suited(self, combs, suit=None):
         result = []
         for c in combs:
-            [a, b] = list(c)
+            [a, b] = [c[0:2], c[2:]]
             s1, s2 = a[1], b[1]
             if suit is not None:
                 if s1 == suit and s2 == suit:

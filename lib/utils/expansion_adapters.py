@@ -9,9 +9,10 @@ class ExpansionAdapters:
     def exact(self, combo: str) -> list[str]:
         return [combo]
 
-    # ATdd
+    # ATdd -> AdTd
     def exactSuited(self, combo: str) -> list[str]:
-        return [combo]
+        [c1, c2, s1, s2] = list(combo)
+        return [c1 + s1 + c2 + s2]
 
     # KK
     def allCombos(self, combo: str) -> list[str]:
@@ -52,20 +53,19 @@ class ExpansionAdapters:
     # 54-T9
     def allCombosBounded(self, combo: str) -> list[str]:
         [raw_hand, ceiling] = H.getRawHandAndCeiling(combo)
-        return H.allGreaterCombinations(raw_hand, ceiling)
+        return H.allGreaterCombinations(raw_hand, {}, ceiling)
 
     # 54-T9o
     def allOffsuitCombosBounded(self, combo: str) -> list[str]:
         [raw_hand, ceiling] = H.getRawHandAndCeiling(combo)
-        return H.allGreaterCombinations(raw_hand, ceiling, H.getFilters(F.OFFSUIT))
+        return H.allGreaterCombinations(raw_hand, H.getFilters(F.OFFSUIT), ceiling)
 
     # 54-T9s
     def allSuitedCombosBounded(self, combo: str) -> list[str]:
         [raw_hand, ceiling] = H.getRawHandAndCeiling(combo)
-        return H.allGreaterCombinations(raw_hand, ceiling, H.getFilters(F.SUITED))
+        return H.allGreaterCombinations(raw_hand, H.getFilters(F.SUITED), ceiling)
 
     # 54-T9cc
     def allSpecificSuitedCombosBounded(self, combo: str) -> list[str]:
-        [raw_hand, ceiling] = H.getRawHandAndCeiling(combo)
-        suit = H.getComboSuit(ceiling)
-        return H.allGreaterCombinations(raw_hand, ceiling, filters=H.getFilters(F.SUITED, suit))
+        [raw_hand, ceiling, suit] = H.getRawHandAndCeilingWithSuit(combo)
+        return H.allGreaterCombinations(raw_hand, H.getFilters(F.SUITED, suit), ceiling)

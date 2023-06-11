@@ -3,8 +3,8 @@ import re
 from enum import Enum
 from typing import Literal
 
-"""hand type regexes"""
 class R:
+    """hand type regexes"""
     NUMBER_OR_FACE_CARD = r"[2-9TJQKA]{1}"
     SUIT = r"[hdcs]{1}"
     OFFSUIT = r"o"
@@ -12,8 +12,8 @@ class R:
     ALL_GREATER_COMBOS = r"\+"
     RANGE_OF_HANDS = r"\-"
 
-"""matcher keys"""
 class K(Enum):
+    """matcher keys"""
     EXACT = 'EXACT'
     EXACT_SUITED = 'EXACT_SUITED'
     ALL_COMBOS = 'ALL_COMBOS'
@@ -27,12 +27,6 @@ class K(Enum):
     ALL_OFFSUIT_COMBOS_BOUNDED = 'ALL_OFFSUIT_COMBOS_BOUNDED'
     ALL_SUITED_COMBOS_BOUNDED = 'ALL_SUITED_COMBOS_BOUNDED'
     ALL_SPECIFIC_SUITED_COMBOS_BOUNDED = 'ALL_SPECIFIC_SUITED_COMBOS_BOUNDED'
-
-"""categories"""
-class C(Enum):
-    EXACT = 'EXACT'
-    BOUNDED = 'BOUNDED'
-    UNBOUNDED = 'UNBOUNDED'
 
 class RangeOrDiscrete(Enum):
     DISCRETE = 'DISCRETE'
@@ -61,6 +55,7 @@ Qualifier = Literal[
 ]
 
 class Hands:
+
     matchers = {
         # AdTd
         K.EXACT:
@@ -70,7 +65,7 @@ class Hands:
             + R.SUIT,
 
         # ATdd
-        # TODO: need to verify that both R.SUIT are the same
+        # needs to be verified by Validator.isSpecificSuitedCombo
         K.EXACT_SUITED:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
@@ -161,7 +156,7 @@ class Hands:
         # need support for 54cc-T9cc? no it's clunky
         # also not supporting 54o-87o / 54s-87s
         # should throw validation error on these
-        # and suggest removing bottom hand qualifier
+        # and suggest removing bottom hand flag, suits
     }
 
     discrete_keys = [
