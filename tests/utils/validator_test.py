@@ -28,22 +28,22 @@ class ValidatorTest:
         'KTos',
     ]
 
-    def runSuite(self):
+    def runSuite(self, is_debug):
         """main test runner"""
         print(Validator.__name__)
 
-        self.validHands()
-        self.invalidHands()
+        self.validHands(is_debug)
+        self.invalidHands(is_debug)
         # add new test calls here
 
-    def validHands(self):
+    def validHands(self, is_debug):
         for h in self.VALID_HANDS:
             if self.validator.isValid(h) != True:
                 return U.fail(f'failed to recognize valid hand: {h}')
 
         U.success('.isValid -> all valid hands return True')
 
-    def invalidHands(self):
+    def invalidHands(self, is_debug):
         for h in self.INVALID_HANDS:
             if self.validator.isValid(h) != False:
                 return U.fail(f'failed to recognize invalid hand: {h}')

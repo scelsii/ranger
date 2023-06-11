@@ -10,9 +10,6 @@ class Expansion:
     def __init__(self, expansion):
         self._expansion = expansion
 
-    def __getitem__(self):
-        return self._expansion
-
     def formatForInput(self):
         return ','.join(self._expansion)
 
