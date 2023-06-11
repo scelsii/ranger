@@ -1,5 +1,5 @@
-from .validator_test import ValidatorTest
-from .expander_test import ExpanderTest
+from .utils.validator_test import ValidatorTest
+from .utils.expander_test import ExpanderTest
 
 # create test class instances here
 validator_test = ValidatorTest()

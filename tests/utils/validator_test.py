@@ -1,4 +1,4 @@
-from .test_utils import U
+from ..test_utils import U
 from lib.utils.validator import Validator
 
 

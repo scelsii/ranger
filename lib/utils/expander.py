@@ -6,6 +6,16 @@ from pprint import pprint
 H = Hands()
 A = ExpansionAdapters()
 
+class Expansion:
+    def __init__(self, expansion):
+        self._expansion = expansion
+
+    def __getitem__(self):
+        return self._expansion
+
+    def formatForInput(self):
+        return ','.join(self._expansion)
+
 class Expander:
     """
     given a range of hands in possibly shorthand notation,
@@ -19,7 +29,7 @@ class Expander:
     ]
     """
 
-    def expand(self, combo: str, debug=False) -> str:
+    def expand(self, combo: str, debug=False) -> Expansion:
         (match_key, qualifier) = H.qualify(combo)
         if debug:
             pprint({
@@ -27,7 +37,7 @@ class Expander:
                 'match_key': match_key,
                 'qualifier': qualifier
             })
-        return self.expandWithAdapter(match_key, combo)
+        return Expansion(self.expandWithAdapter(match_key, combo))
 
     def expandWithAdapter(self, match_key: MatcherKey, combo: str) -> list[str]:
         expansion = None

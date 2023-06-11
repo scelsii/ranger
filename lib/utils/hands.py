@@ -65,7 +65,7 @@ class Hands:
             + R.SUIT,
 
         # ATdd
-        # needs to be verified by Validator.isSpecificSuitedCombo
+        # needs to be verified by Validator.isValidSpecificSuitedCombo
         K.EXACT_SUITED:
             R.NUMBER_OR_FACE_CARD
             + R.NUMBER_OR_FACE_CARD
