@@ -43,7 +43,7 @@ class Expander:
         expansion = None
 
         if match_key == K.EXACT:
-            expansion = A.exactSuited(combo)
+            expansion = A.exact(combo)
 
         elif match_key == K.EXACT_SUITED:
             expansion = A.exactSuited(combo)

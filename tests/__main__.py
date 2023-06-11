@@ -9,3 +9,6 @@ expander_test = ExpanderTest()
 def runTests():
     validator_test.runSuite()
     expander_test.runSuite()
+
+if __name__ == '__main__':
+    runTests()

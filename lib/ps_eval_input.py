@@ -8,7 +8,9 @@ class PsEvalInput:
     def preprocess(self, input: str) -> list[str]:
         combos = input.split(',')
         for c in combos:
-            if not self.validator.isValid(c) or (self.validator.isSpecificSuitedCombo(c) and not self.validator.isValidSpecificSuitedCombo(c)):
+            if not self.validator.isValid(c) or \
+               (self.validator.isSpecificSuitedCombo(c) and \
+                not self.validator.isValidSpecificSuitedCombo(c)):
                 raise ValueError(f'combo = {c} is invalid')
         return combos
 
@@ -19,6 +21,13 @@ class PsEvalInput:
             self.expansions.append(self.expander.expand(vc).formatForInput())
         self.formatted_input = ','.join(self.expansions)
 
-    def remove(self, hand):
+    def getHand(self):
+        return self.formatted_input
+
+    # hero is PsEvalInput instance
+    def remove(self, hero):
+        hand: str = hero.getHand()
         mirror = hand[2:] + hand[0:2]
-        return self.formatted_input.replace(hand + ',', '').replace(mirror + ',', '')
+        self.formatted_input = self.formatted_input \
+            .replace(hand + ',', '').replace(mirror + ',', '')
+        return self

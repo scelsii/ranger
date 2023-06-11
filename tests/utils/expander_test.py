@@ -1,5 +1,5 @@
 from ..test_utils import U
-from lib.utils.expander import Expander
+from lib.utils.expander import Expander, Expansion
 from lib.utils.hands import K
 
 E = Expander()
@@ -28,19 +28,20 @@ class ExpanderTest:
     def getMessage(self, hand, matcher_key):
         return SEP.join([hand, str(matcher_key)])
 
-    def test(self, expected, actual, msg):
-        return U.fail(msg) if expected != actual else U.success(msg)
+    def test(self, expected: list[str], actual: Expansion, msg):
+        return U.success(msg) if expected == actual._expansion else U.fail(msg)
 
     def exact(self):
         hand = 'JdTc'
-        expected = ['JTdc']
+        expected = [hand]
         actual = E.expand(hand)
         msg = self.getMessage(hand, K.EXACT)
         self.test(expected, actual, msg)
 
     def exactSuited(self):
         hand = 'JThh'
-        expected = ['JhTh']
+        normalized = 'JhTh'
+        expected = [normalized]
         actual = E.expand(hand)
         msg = self.getMessage(hand, K.EXACT_SUITED)
         self.test(expected, actual, msg)
