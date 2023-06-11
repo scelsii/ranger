@@ -37,6 +37,8 @@ class Expander:
         print(f'expanding range = {range} with match_keys = {match_keys}')
 
     def expandDiscrete(self, match_key: MatcherKey, combo: str) -> list[str]:
+        print(f'expanding combo = {combo} with match_key = {match_key}')
+
         expansion = None
 
         if match_key == K.EXACT:
@@ -63,6 +65,9 @@ class Expander:
         elif match_key == K.ALL_GREATER_SUITED_COMBOS:
             expansion = self.adapters.allGreaterSuitedCombos(combo)
 
+        elif match_key == K.ALL_GREATER_SPECIFIC_SUITED_COMBOS:
+            expansion = self.adapters.allGreaterSpecificSuitedCombos(combo)
+
         elif match_key == K.ALL_COMBOS_BOUNDED:
             expansion = self.adapters.allCombosBounded()
 
@@ -79,4 +84,5 @@ class Expander:
             raise ValueError(f'unsupported match_key = {match_key} in .expandDiscrete, unable to find adapter')
 
         print(expansion)
+
         return expansion

@@ -40,15 +40,15 @@ class ValidatorTest:
 
     def validHands(self):
         for h in self.VALID_HANDS:
-            if self.validator.is_valid(h) != True:
+            if self.validator.isValid(h) != True:
                 return U.fail(f'failed to recognize valid hand: {h}')
 
-        U.success('.is_valid -> all valid hands return True')
+        U.success('.isValid -> all valid hands return True')
 
 
     def invalidHands(self):
         for h in self.INVALID_HANDS:
-            if self.validator.is_valid(h) != False:
+            if self.validator.isValid(h) != False:
                 return U.fail(f'failed to recognize invalid hand: {h}')
 
-        U.success('.is_valid -> all invalid hands return False')
+        U.success('.isValid -> all invalid hands return False')
