@@ -1,9 +1,12 @@
 from .expansion_flags import F
 from .poker_iterator import PokerIterator
+from .validator import Validator
 
 SUIT_LIST = list('hdcs')
 
 class ExpansionHelpers:
+
+    validator = Validator()
 
     # strip flags and return cards only
     def getRawHand(self, combo: str) -> str:
@@ -66,7 +69,7 @@ class ExpansionHelpers:
         suit = filters.get('suit')
         return [offsuit, suited, suit]
 
-    def offsuit(self, combs):
+    def offsuit(self, combs: list[str]):
         result = []
         for c in combs:
             [a, b] = [c[0:2], c[2:]]
@@ -75,7 +78,7 @@ class ExpansionHelpers:
                 result.append(c)
         return result
 
-    def suited(self, combs, suit=None):
+    def suited(self, combs: list[str], suit=None):
         result = []
         for c in combs:
             [a, b] = [c[0:2], c[2:]]
@@ -88,23 +91,30 @@ class ExpansionHelpers:
                     result.append(c)
         return result
 
-    def prune(self, perms):
+    def prune(self, perms: list[str]):
         deduped = self.dedupe(perms)
         cleaned = self.clean(deduped)
         return cleaned
 
-    def dedupe(self, perms):
+    # ATdd -> AdTd
+    def normalizeSpecificSuitedCombo(self, combo: str):
+        return combo[0] + combo[2] + combo[1] + combo[3]
+
+    def getMirror(self, combo: str):
+        return combo[2:] + combo[0:2]
+
+    def dedupe(self, perms: list[str]):
         results = []
         seen = {}
         for p in perms:
-            p_mirror = p[2:] + p[0:2]
+            p_mirror = self.getMirror(p)
             if p_mirror not in seen and p not in seen:
                 results.append(p)
                 seen[p] = True
                 seen[p_mirror] = True
         return results
 
-    def clean(self, deduped):
+    def clean(self, deduped: list[str]):
         result = []
         for v in deduped:
             if v[0:2] != v[2:]:

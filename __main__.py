@@ -20,9 +20,13 @@ hero = PsEvalInput(sys.argv[1])
 villain_range = PsEvalInput(sys.argv[2])
 board = None if len(sys.argv) < 4 else sys.argv[3]
 
-args = ['-h', hero.getHand(), villain_range.remove(hero).getHand()]
+hero_hand = hero.getHand()
+villain_hand = villain_range.remove(hero).getHand()
+
+args = ['-h', hero_hand, villain_hand]
 
 if board is not None:
     args += ['-b', board]
 
-ps_eval(args)
+output = ps_eval(args)
+print(output.replace(villain_hand, sys.argv[2]))

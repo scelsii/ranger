@@ -1,16 +1,18 @@
 from .utils.expander import Expander
 from .utils.validator import Validator
+from .utils.expansion_helpers import ExpansionHelpers
 
 class PsEvalInput:
+    helpers = ExpansionHelpers
     expander = Expander()
     validator = Validator()
 
     def preprocess(self, input: str) -> list[str]:
         combos = input.split(',')
         for c in combos:
-            if not self.validator.isValid(c) or \
-               (self.validator.isSpecificSuitedCombo(c) and \
-                not self.validator.isValidSpecificSuitedCombo(c)):
+            if not self.validator.isValid(c) \
+                or (self.validator.isSpecificSuitedCombo(c)
+                    and not self.validator.isValidSpecificSuitedCombo(c)):
                 raise ValueError(f'combo = {c} is invalid')
         return combos
 
@@ -27,7 +29,7 @@ class PsEvalInput:
     # hero is PsEvalInput instance
     def remove(self, hero):
         hand: str = hero.getHand()
-        mirror = hand[2:] + hand[0:2]
+        mirror = self.helpers.getMirror(self.helpers, hand)
         self.formatted_input = self.formatted_input \
             .replace(hand + ',', '').replace(mirror + ',', '')
         return self
