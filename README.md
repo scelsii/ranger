@@ -4,11 +4,15 @@ A Holdem poker analysis CLI util for all systems
 
 ## Why
 
-[PokerStove](https://github.com/andrewprock/pokerstove) is/was an amazing poker analysis tool developed as a GUI for Windows systems. The GUI is powered by a set of C++ libraries including `ps_eval`, which does not natively support poker ranges
+[PokerStove](https://github.com/andrewprock/pokerstove) is an amazing poker analysis tool developed as a GUI for Windows systems. The GUI is powered by a set of C++ libraries including `ps_eval`, which does not natively support poker ranges
 
 We are `hero` and our opponent is `villain`. If we want to calculate the likelihood of hero winning against a set of villain hands -- this is a `range` -- then we need a way of creating that range from common shorthand poker notation
 
 ## How
+
+```bash
+$ python3 . <hero> <villain_range> [<board>]
+```
 
 Run scenarios with or without a `board` at any stage of play
 
@@ -30,7 +34,7 @@ The hand 77+,AK has 44.9324 % equity (25179 1066 0 0)
 
 ## Supported shorthand types and what they mean
 
-The best way to see what inputs are supported is to run the Ranger test suites and look at the left-hand side of each `Expander` test case
+The best way to see what shorthand types are supported is to run the Ranger test suites and look at the left-hand side of each `Expander` test case
 
 ```bash
 $ python3 -m tests
@@ -54,5 +58,5 @@ Expander
 ✅ 54-T9cc -> K.ALL_SPECIFIC_SUITED_COMBOS_BOUNDED
 ```
 
-> A note about hand ranges: notice we're using combinations, not permutations: `AdAc` and `AcAd` are the same hand. `K`-fields are pattern matchers for the type of shorthand notation that's under test
+> Notice we're using combinations, not permutations: `AdAc` and `AcAd` are the same hand. `K`-fields are pattern matchers for the type of shorthand notation that's under test
 
