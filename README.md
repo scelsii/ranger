@@ -1,6 +1,6 @@
 # Ranger
 
-A Holdem poker analysis CLI util for all systems
+A Holdem poker analysis CLI util
 
 ## Why
 
