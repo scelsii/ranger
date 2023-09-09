@@ -18,7 +18,7 @@ Run scenarios with or without a `board` at any stage of play
 - river   = 5 cards
 
 ```bash
-$ python3 . TcTs 77+,AK '3c4c5c'
+$ python3 . TcTs 77+,AK 3c4c5c
 The hand TcTs has 55.0676 % equity (31099 1066 0 0)
 The hand 77+,AK has 44.9324 % equity (25179 1066 0 0)
 ```
